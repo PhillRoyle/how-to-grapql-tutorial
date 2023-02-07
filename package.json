@@ -33,6 +33,7 @@
     "generate": "tsnd --transpile-only src/schema.ts",
     "prisma:main": "npx ts-node src/script.ts",
     "prisma:regen": "npx prisma generate",
+    "prisma:regen-named": "npx prisma migrate dev --name \"add-user-model\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "version": "1.0.0"

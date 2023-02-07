@@ -122,3 +122,22 @@ Added this stuff in `script.ts` as a separate runner to play with it. To execute
 * next add the context to the Apollo server in `index.ts` - note that it must be an async function returning the context
 * next, make use of the `context.prisma` stuff in the resolvers (in `Link`)
 * as we're using prisma (MySQL) rather than a text file, changes are now persisted between restarts
+
+## Auth and Auth
+First, need to define the concept of a `User` - add it to the prisma schema - a new `User` model, and adding fileds to `Link` to represent who posted the link...
+
+As we have changed the DB schema, we need to regenerate the auto-gen files. Here we used a named one `prisma:regen-named` (look inside `prisma/migrations`, it gives a migration path, and naming them makes sense).
+
+Next, define the schema as `graphql/User.ts` - note the `links` field is a non-null array of Links, and as it's not simple, we need to add a resolver to fetch that data... Same for `Links` when we add the `postedBy` field. Looks like as it's not a trivial scala value, we need to tell graphQL exactly how to retrieve that from the DB. It uses `parent` to find the _current_ object in the DB, and then gets the specific field from there.
+
+? Does that mean 2 DB queries???
+
+> Note: This interesting syntax where you can traverse and fetch relation fields by chaining the field name (findUnique(...).relationFieldName()) is called the [Fluent API](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#fluent-api) in Prisma
+
+
+Run `npm run generate` to make `schema.graphql` update to include the new object.
+
+### Implementing `singup` and `login`
+Implementing JWT-based authentication, so we'll make an `AuthPayload` type, containing a token, that will be the return type for `signup` and `login` APIs (mutators)
+
+

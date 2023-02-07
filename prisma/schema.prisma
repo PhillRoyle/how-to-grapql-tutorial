@@ -15,4 +15,16 @@ model Link {
   createdAt   DateTime @default(now())
   description String
   url         String
+  // note @relation maps this field to the PK of the other table...
+  postedBy    User?    @relation(fields: [postedById], references: [id])
+  postedById  Int?
+}
+
+// define a USer schema - not that it holds a collection of Links
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+  links    Link[]
 }

@@ -35,6 +35,11 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  User: { // root type
+    email: string; // String!
+    id: number; // Int!
+    name: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -51,16 +56,23 @@ export interface NexusGenFieldTypes {
   Link: { // field return type
     description: string; // String!
     id: number; // Int!
+    postedBy: NexusGenRootTypes['User'] | null; // User
     url: string; // String!
   }
   Mutation: { // field return type
-    delete: NexusGenRootTypes['Link']; // Link!
-    post: NexusGenRootTypes['Link']; // Link!
-    update: NexusGenRootTypes['Link']; // Link!
+    createLink: NexusGenRootTypes['Link']; // Link!
+    deleteLink: NexusGenRootTypes['Link']; // Link!
+    updateLink: NexusGenRootTypes['Link']; // Link!
   }
   Query: { // field return type
-    feed: NexusGenRootTypes['Link'][]; // [Link!]!
-    single_link: NexusGenRootTypes['Link']; // Link!
+    fetchAllLinks: NexusGenRootTypes['Link'][]; // [Link!]!
+    fetchSingleLink: NexusGenRootTypes['Link']; // Link!
+  }
+  User: { // field return type
+    email: string; // String!
+    id: number; // Int!
+    links: NexusGenRootTypes['Link'][]; // [Link!]!
+    name: string; // String!
   }
 }
 
@@ -68,36 +80,43 @@ export interface NexusGenFieldTypeNames {
   Link: { // field return type name
     description: 'String'
     id: 'Int'
+    postedBy: 'User'
     url: 'String'
   }
   Mutation: { // field return type name
-    delete: 'Link'
-    post: 'Link'
-    update: 'Link'
+    createLink: 'Link'
+    deleteLink: 'Link'
+    updateLink: 'Link'
   }
   Query: { // field return type name
-    feed: 'Link'
-    single_link: 'Link'
+    fetchAllLinks: 'Link'
+    fetchSingleLink: 'Link'
+  }
+  User: { // field return type name
+    email: 'String'
+    id: 'Int'
+    links: 'Link'
+    name: 'String'
   }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
-    delete: { // args
-      id: number; // Int!
-    }
-    post: { // args
+    createLink: { // args
       description: string; // String!
       url: string; // String!
     }
-    update: { // args
+    deleteLink: { // args
+      id: number; // Int!
+    }
+    updateLink: { // args
       description?: string | null; // String
       id: number; // Int!
       url?: string | null; // String
     }
   }
   Query: {
-    single_link: { // args
+    fetchSingleLink: { // args
       id: number; // Int!
     }
   }

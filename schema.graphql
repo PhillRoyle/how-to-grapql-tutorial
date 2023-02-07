@@ -5,16 +5,24 @@
 type Link {
   description: String!
   id: Int!
+  postedBy: User
   url: String!
 }
 
 type Mutation {
-  delete(id: Int!): Link!
-  post(description: String!, url: String!): Link!
-  update(description: String, id: Int!, url: String): Link!
+  createLink(description: String!, url: String!): Link!
+  deleteLink(id: Int!): Link!
+  updateLink(description: String, id: Int!, url: String): Link!
 }
 
 type Query {
-  feed: [Link!]!
-  single_link(id: Int!): Link!
+  fetchAllLinks: [Link!]!
+  fetchSingleLink(id: Int!): Link!
+}
+
+type User {
+  email: String!
+  id: Int!
+  links: [Link!]!
+  name: String!
 }

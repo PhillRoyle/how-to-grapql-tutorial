@@ -1,31 +1,28 @@
 // objectType is used to define a new `type` in graqhQL schema
 import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
-// this was the fella before adding mutation
-// import { extendType, objectType } from "nexus";
-import { NexusGenObjects } from "../../nexus-typegen";
 
+// *********************
+// Define the Object Schema itself
+// *********************
 export const Link = objectType({
     name: "Link",
     definition(t) {
         t.nonNull.int("id");
         t.nonNull.string("description");
         t.nonNull.string("url");
+        // add an OPTIONAL (not nonNull) link to the user who created this. Note it's 
+        // a `field` here, not an easily resolvable scalar type, so the `resolver`
+        // fn tells graphql how to get this from the DB and how to return it.
+        t.field("postedBy", {
+            type: "User",
+            resolve(parent, args, context) {
+                return context.prisma.link
+                    .findUnique({ where: { id: parent.id } })
+                    .postedBy();
+            },
+        });
     },
 });
-
-// not using a DB, just in-memory, so this is our data source!
-// let links: NexusGenObjects["Link"][] = [
-//     {
-//         id: 1,
-//         url: "www.howtographql.com",
-//         description: "Fullstack tutorial for GraphQL",
-//     },
-//     {
-//         id: 2,
-//         url: "graphql.org",
-//         description: "GraphQL official website",
-//     },
-// ];
 
 // *********************
 // Below here, define the Queries & Mutations that make up my API
@@ -36,7 +33,7 @@ export const LinkQuery = extendType({
     type: "Query",
     definition(t) {
         // return type is 'not nullable array of link type objects' ~ [Link!]!
-        t.nonNull.list.nonNull.field("feed", {
+        t.nonNull.list.nonNull.field("fetchAllLinks", {
             type: "Link",
             // 'resolve' is the name of the resolver function
             resolve(parent, args, context, info) {
@@ -52,7 +49,7 @@ export const LinkQuery = extendType({
 export const FeedQuery = extendType({
     type: "Query",
     definition(t) {
-        t.nonNull.field("single_link", {
+        t.nonNull.field("fetchSingleLink", {
             type: "Link",
             // basically the body of a post request
             args: {
@@ -76,7 +73,7 @@ export const LinkMutation = extendType({
     type: "Mutation",
     definition(t) {
         // I guess this could be 'put' or 'delete' too?
-        t.nonNull.field("post", {
+        t.nonNull.field("createLink", {
             type: "Link",
             // basically the body of a post request
             args: {
@@ -102,7 +99,7 @@ export const DeleteLinkMutation = extendType({
     type: "Mutation",
     definition(t) {
         // I guess this could be 'put' or 'delete' too?
-        t.nonNull.field("delete", {
+        t.nonNull.field("deleteLink", {
             type: "Link",
             // basically the body of a post request
             args: {
@@ -125,7 +122,7 @@ export const DeleteLinkMutation = extendType({
 export const ModifyLinkMutation = extendType({
     type: "Mutation",
     definition(t) {
-        t.nonNull.field("update", {
+        t.nonNull.field("updateLink", {
             type: "Link",
             // basically the body of a post request
             args: {
