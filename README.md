@@ -98,7 +98,7 @@ type (`id`, `description` and `url`), the incoming parent object is the element 
 2. Generate the GraphQL SDL and types. 
 3. Implement the corresponding resolver functions for the added fields.
 
-## Add Persistence
+## Add Persistence - using Prisma and MySQL
 From [how to graphQL](https://www.howtographql.com/typescript-apollo/4-adding-a-database/):
 > Next set up a new SQLite to persist the data of incoming GraphQL mutations. Instead of writing SQL directly, 
 > you will use Prisma to access your database.
@@ -116,7 +116,9 @@ Added this stuff in `script.ts` as a separate runner to play with it. To execute
 ``npm run prisma:fetch``. This stuff will be moved into Graphql next.
 
 ### Hook up to GraphQL
+
 * create a `context.ts` file to hold out context obj (see [Steps](#Steps)).
 * add that context to `schema.ts` to provide a `contextType`
 * next add the context to the Apollo server in `index.ts` - note that it must be an async function returning the context
 * next, make use of the `context.prisma` stuff in the resolvers (in `Link`)
+* as we're using prisma (MySQL) rather than a text file, changes are now persisted between restarts
