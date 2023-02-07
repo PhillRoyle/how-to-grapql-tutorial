@@ -1,8 +1,8 @@
 // objectType is used to define a new `type` in graqhQL schema
-import {extendType, intArg, nonNull, objectType, stringArg} from "nexus";
+import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
 // this was the fella before adding mutation
 // import { extendType, objectType } from "nexus";
-import {NexusGenObjects} from "../../nexus-typegen";
+import { NexusGenObjects } from "../../nexus-typegen";
 
 export const Link = objectType({
     name: "Link",
@@ -14,18 +14,18 @@ export const Link = objectType({
 });
 
 // not using a DB, just in-memory, so this is our data source!
-let links: NexusGenObjects["Link"][] = [
-    {
-        id: 1,
-        url: "www.howtographql.com",
-        description: "Fullstack tutorial for GraphQL",
-    },
-    {
-        id: 2,
-        url: "graphql.org",
-        description: "GraphQL official website",
-    },
-];
+// let links: NexusGenObjects["Link"][] = [
+//     {
+//         id: 1,
+//         url: "www.howtographql.com",
+//         description: "Fullstack tutorial for GraphQL",
+//     },
+//     {
+//         id: 2,
+//         url: "graphql.org",
+//         description: "GraphQL official website",
+//     },
+// ];
 
 // *********************
 // Below here, define the Queries & Mutations that make up my API
@@ -40,7 +40,8 @@ export const LinkQuery = extendType({
             type: "Link",
             // 'resolve' is the name of the resolver function
             resolve(parent, args, context, info) {
-                return links;
+                // return links;
+                return context.prisma.link.findMany();
             },
         });
     },
@@ -59,8 +60,12 @@ export const FeedQuery = extendType({
             },
             // 'resolve' is the name of the resolver function
             resolve(parent, args, context, info) {
-                const {id} = args;
-                return links.find(Link => Link.id === id);
+                const { id } = args;
+                return context.prisma.link.findUnique({
+                    where: {
+                        id: id
+                    }
+                });
             },
         });
     },
@@ -80,17 +85,14 @@ export const LinkMutation = extendType({
             },
 
             resolve(parent, args, context) {
-                const {description, url} = args;
-
-                // naive way to increment IDs...
-                let idCount = links.length + 1;
-                const link = {
-                    id: idCount,
-                    description: description,
-                    url: url,
-                };
-                links.push(link);
-                return link;
+                const { description, url } = args;
+                const newLink = context.prisma.link.create({
+                    data: {
+                        description,
+                        url,
+                    },
+                });
+                return newLink;
             },
         });
     },
@@ -108,11 +110,11 @@ export const DeleteLinkMutation = extendType({
             },
 
             resolve(parent, args, context) {
-                const {id} = args;
-
-                const linkForDeletion = links.find(link => link.id === id);
-                const linkToDeleteIndex = links.indexOf(linkForDeletion);
-                links.splice(linkToDeleteIndex, 1)
+                const linkForDeletion = context.prisma.link.delete({
+                    where: {
+                        id: args.id
+                    }
+                });
                 return linkForDeletion;
             },
         });
@@ -123,24 +125,30 @@ export const DeleteLinkMutation = extendType({
 export const ModifyLinkMutation = extendType({
     type: "Mutation",
     definition(t) {
-        t.nonNull.field("updateArgument", {
+        t.nonNull.field("update", {
             type: "Link",
             // basically the body of a post request
             args: {
                 id: nonNull(intArg()),
-                // make these two optional... only modify what you want
+                // make these optional by not making them non-null
                 description: stringArg(),
                 url: stringArg(),
             },
 
             resolve(parent, args, context) {
-                const {id, description, url} = args;
+                const { id, description, url } = args;
 
-                const linkToModify = links.find(Link => Link.id === id);
-                const index = links.indexOf(linkToModify);
+                const linkToModify = context.prisma.link.update({
+                    where: {
+                        id,
+                    },
+                    data: {
+                        //when a field is assigned undefined it means ignore this and do nothing for this field.
+                        description: description ? description : undefined,
+                        url: url ? url : undefined,
+                    }
+                });
 
-                linkToModify.description = description ? description : linkToModify.description;
-                linkToModify.url = url ? url : linkToModify.url;
                 return linkToModify;
             },
         });

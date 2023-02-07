@@ -1,34 +1,39 @@
 {
-  "name": "following the 'how to graphql tutorial",
   "author": "",
   "bugs": {
     "url": "https://github.com/PhillRoyle/how-to-grapql-tutorial/issues"
   },
   "dependencies": {
     "@apollo/server": "^4.3.2",
+    "@prisma/client": "^4.9.0",
     "@types/node": "^18.11.18",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "graphql": "^16.6.0",
     "nexus": "^1.3.0",
+    "prisma": "4.9.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.9.5"
   },
+  "description": "this tutorial follows the 'how to graphql' tutorial",
   "homepage": "https://github.com/PhillRoyle/how-to-grapql-tutorial#readme",
   "keywords": [],
   "license": "ISC",
   "main": "index.ts",
+  "name": "how-to-graphql-tutorial",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PhillRoyle/how-to-grapql-tutorial.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build/compile": "tsc",
     "dev": "ts-node-dev --transpile-only --no-notify --exit-child src/index.ts",
     "generate": "tsnd --transpile-only src/schema.ts",
-    "build/compile": "tsc"
+    "prisma:main": "npx ts-node src/script.ts",
+    "prisma:regen": "npx prisma generate",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "version": "1.0.0"
 }

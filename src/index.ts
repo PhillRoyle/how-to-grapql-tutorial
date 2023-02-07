@@ -1,14 +1,25 @@
-import {ApolloServer} from "@apollo/server";
-import {startStandaloneServer} from "@apollo/server/standalone";
-import {schema} from "./schema";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { schema } from "./schema";
+import { Context, context } from "./context";
 
-export const server = new ApolloServer({
+export const server = new ApolloServer<Context>({
     schema,
 });
 
 const port = 3000;
-startStandaloneServer(server, {
-    listen: {port: port},
-}).then(({url}) => {
-    console.log(`🚀  Server ready at: ${url}`);
-});
+
+async function startServer() {
+
+    const { url } = await startStandaloneServer(server, {
+        listen: { port},
+        context: async () => context,
+    });
+    console.log(`🚀  Server ready at ${url}`);
+}
+
+{
+    console.log(`**** called the block`);
+    startServer();
+    console.log(`**** done called the block`);
+};

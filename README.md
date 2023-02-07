@@ -23,7 +23,8 @@ it auto-added to `schema.graphql`.
       1. `parent` - (or 'root') the result of the *previous* resolver. Queries can be nested (inside the {}), so the 
       first passes result on to the 2nd, etc etc, see [Nesting Queries](#Nesting-Queries)
       2. `args`
-      3. `context`
+      3. `context` - when using prisma (etc) to get the data, we use this to register it to the resolver. A js obj that
+      all resolvers in the chain and read/write to, so it allows them to communicate.
       4. `info`
 5. Add a `mutator` - ~PUT/POST request. **NB** this is the *inline* method - preferable to user variable-based approach.
    1. create a new one with `mutation { post(url: "bbc.co.uk", description: "BBC") {id}}` - note the `{id}` is the return
@@ -97,6 +98,25 @@ type (`id`, `description` and `url`), the incoming parent object is the element 
 2. Generate the GraphQL SDL and types. 
 3. Implement the corresponding resolver functions for the added fields.
 
+## Add Persistence
+From [how to graphQL](https://www.howtographql.com/typescript-apollo/4-adding-a-database/):
+> Next set up a new SQLite to persist the data of incoming GraphQL mutations. Instead of writing SQL directly, 
+> you will use Prisma to access your database.
 
+Installed prima (and client), and init it with `npx prisma init`. Prisma is an ORM, containing a schema that allows
+it to map to the underlying data nicely. SQLite is a self-contained, serverless, zero-configuration, transactional SQL 
+database engine - reads and writes directly to disk, so not lots of set up, in fact prisma can do it:
+`npx prisma migrate dev --name "init"` --> creates `dev.db` and `dev.db-journal` - used `schema.prisma` to make a
+`Link` DB table.
 
+**NB** can regenerate data using `npx prisma generate`.
 
+### Running it as standalone
+Added this stuff in `script.ts` as a separate runner to play with it. To execute, run `npx ts-node src/script.ts`, or 
+``npm run prisma:fetch``. This stuff will be moved into Graphql next.
+
+### Hook up to GraphQL
+* create a `context.ts` file to hold out context obj (see [Steps](#Steps)).
+* add that context to `schema.ts` to provide a `contextType`
+* next add the context to the Apollo server in `index.ts` - note that it must be an async function returning the context
+* next, make use of the `context.prisma` stuff in the resolvers (in `Link`)

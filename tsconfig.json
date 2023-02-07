@@ -1,17 +1,43 @@
-//{
-//  "compilerOptions": {
-//    "target": "es2020",
-//    "module": "esnext",
-//    "lib": [
-//      "es2020"
-//    ],
-////    "strict": true,
-//    "rootDir": ".",
-//    "outDir": "dist",
-//    "sourceMap": true,
-//    "esModuleInterop": true
-//  }
-//}
+/*
+ES2020 will go in the lib array. It refers to which language features to include.
+
+commonjs will go in the module property. This refers to which module system you are using (ie. are you using require and module.exports syntax (commonjs), 
+or import and export syntax (esm)?).
+
+`module` in tsconfig.json tells the compiler what syntax to use for the modules in the emitted .js files:
+* When you set "module" to "commonjs" in tsconfig.json, this means that the modules in the compiled .js files will use the commonJS (CJS) syntax, 
+so var x = require(...) and module.exports = {...} to import and export.
+* If you changed "module" to "ES2015" for example, the compiled code would use the import and export keywords used in ES2015
+* esnext enables support for these features which often are not added to official specifications yet
+
+If set to anything other than `commonjs` need to specify `"moduleResolution": "node",` too!
+strongly encourage explicitly specifying "moduleResolution" whenever specifying "module".
+*/
+
+// this should work, but bug in tsnd
+// {
+//   "compilerOptions": {
+//     "allowSyntheticDefaultImports": true,
+//     "target": "es2020",
+//     "module": "esnext",
+//     "moduleResolution": "node",
+//     "experimentalDecorators": true,
+//     "allowJs": true,
+//     "checkJs": false,
+//     "outDir": "./dist",
+//     "strict": false,
+//     "noImplicitThis": true,
+//     "noImplicitOverride": true,
+//     "esModuleInterop": true,
+//     "resolveJsonModule": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "declaration": true,
+//     "lib": [
+//       "es2020",
+//       "esnext.array"
+//     ]
+//   }
+// }
 
 {
   "compilerOptions": {

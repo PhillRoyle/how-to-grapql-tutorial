@@ -4,7 +4,7 @@
  */
 
 
-
+import type { Context } from "./src/context"
 
 
 
@@ -56,7 +56,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     delete: NexusGenRootTypes['Link']; // Link!
     post: NexusGenRootTypes['Link']; // Link!
-    updateArgument: NexusGenRootTypes['Link']; // Link!
+    update: NexusGenRootTypes['Link']; // Link!
   }
   Query: { // field return type
     feed: NexusGenRootTypes['Link'][]; // [Link!]!
@@ -73,7 +73,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     delete: 'Link'
     post: 'Link'
-    updateArgument: 'Link'
+    update: 'Link'
   }
   Query: { // field return type name
     feed: 'Link'
@@ -90,7 +90,7 @@ export interface NexusGenArgTypes {
       description: string; // String!
       url: string; // String!
     }
-    updateArgument: { // args
+    update: { // args
       description?: string | null; // String
       id: number; // Int!
       url?: string | null; // String
@@ -134,7 +134,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: any;
+  context: Context;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;

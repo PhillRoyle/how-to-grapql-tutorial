@@ -1,0 +1,18 @@
+// define the DB we're using, and the path to it
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// The data model - has fields for all of our `Link` fields
+model Link {
+  // @id == this is primary key; @default - how field generated if I don't pass it in
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  description String
+  url         String
+}
