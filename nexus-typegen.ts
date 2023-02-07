@@ -28,6 +28,10 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  AuthPayload: { // root type
+    token: string; // String!
+    user: NexusGenRootTypes['User']; // User!
+  }
   Link: { // root type
     description: string; // String!
     id: number; // Int!
@@ -53,6 +57,10 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  AuthPayload: { // field return type
+    token: string; // String!
+    user: NexusGenRootTypes['User']; // User!
+  }
   Link: { // field return type
     description: string; // String!
     id: number; // Int!
@@ -62,6 +70,8 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createLink: NexusGenRootTypes['Link']; // Link!
     deleteLink: NexusGenRootTypes['Link']; // Link!
+    login: NexusGenRootTypes['AuthPayload']; // AuthPayload!
+    signup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     updateLink: NexusGenRootTypes['Link']; // Link!
   }
   Query: { // field return type
@@ -77,6 +87,10 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  AuthPayload: { // field return type name
+    token: 'String'
+    user: 'User'
+  }
   Link: { // field return type name
     description: 'String'
     id: 'Int'
@@ -86,6 +100,8 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createLink: 'Link'
     deleteLink: 'Link'
+    login: 'AuthPayload'
+    signup: 'AuthPayload'
     updateLink: 'Link'
   }
   Query: { // field return type name
@@ -108,6 +124,15 @@ export interface NexusGenArgTypes {
     }
     deleteLink: { // args
       id: number; // Int!
+    }
+    login: { // args
+      email: string; // String!
+      password: string; // String!
+    }
+    signup: { // args
+      email: string; // String!
+      name: string; // String!
+      password: string; // String!
     }
     updateLink: { // args
       description?: string | null; // String
