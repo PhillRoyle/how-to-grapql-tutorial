@@ -15,9 +15,11 @@ model Link {
   createdAt   DateTime @default(now())
   description String
   url         String
-  // note @relation maps this field to the PK of the other table...
-  postedBy    User?    @relation(fields: [postedById], references: [id])
+  // note @relation maps this field to the PK of the other table... 
+  // Added `name` becasue theres a 1-many here and many-many for `voters`, so we need to differentiate
+  postedBy    User?    @relation(name: "PostedBy", fields: [postedById], references: [id])
   postedById  Int?
+  voters      User[]   @relation(name: "Votes")
 }
 
 // define a USer schema - not that it holds a collection of Links
@@ -26,5 +28,7 @@ model User {
   name     String
   email    String @unique
   password String
-  links    Link[]
+  links    Link[] @relation(name: "PostedBy")
+  // many to many with Link.voters - in DB, new join table, but prisma abstracts it away. Here it's implicit. Can make it explicit by defining a new table here in prisma
+  votes    Link[] @relation(name: "Votes")
 }

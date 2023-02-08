@@ -7,7 +7,7 @@ Take a look at my `oreilly_practical_graphQL` repo for basics
 
 Making a 'hackernews' api
 
-## Steps
+## 1. Basic CRUD
 
 1. ran `npx ts-node --transpile-only src/schema` - generated `nexus-typegen.ts` and `schema.graphql` files. NB, to do
    this, had to remove the `"type": "module",` from `package.json`.
@@ -113,7 +113,9 @@ type (`id`, `description` and `url`), the incoming parent object is the element 
 2. Generate the GraphQL SDL and types.
 3. Implement the corresponding resolver functions for the added fields.
 
-## Add Persistence - using Prisma and MySQL
+---
+
+## 2. Add Persistence - using Prisma and MySQL
 
 From [how to graphQL](https://www.howtographql.com/typescript-apollo/4-adding-a-database/):
 
@@ -145,7 +147,9 @@ Added this stuff in `script.ts` as a separate runner to play with it. To execute
 - next, make use of the `context.prisma` stuff in the resolvers (in `Link`)
 - as we're using prisma (MySQL) rather than a text file, changes are now persisted between restarts
 
-## Auth and Auth
+---
+
+## 3. Auth and Auth
 
 First, need to define the concept of a `User` - add it to the prisma schema - a new `User` model, and adding fileds to `Link` to represent who posted the link...
 
@@ -188,3 +192,10 @@ Run a `signup` mutation (see `schema.graphql` for the list Mutations & Queries) 
 Grab the token and try the `createLink` mutation aghain, but before sending it, add a header `Authorization`: `Bearer <token>` and send.
 
 This time, it should be successful _and_, the link should be linked to the user who created it!
+
+---
+
+## 4. Voting and Customer Scalars
+
+1. modified `schema.prisma` to include additional table fields (and relationships)
+2. re-generate the schemas with `npx prisma migrate dev --name "add-vote-relation"`
