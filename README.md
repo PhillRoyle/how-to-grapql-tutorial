@@ -197,5 +197,16 @@ This time, it should be successful _and_, the link should be linked to the user 
 
 ## 4. Voting and Customer Scalars
 
+### Add voting
+An enhancement to both Link and User schemas - a user can now upvote a post (link). That means that each Link should record who's voted for it, 
+and each user should know which Links they've voted for. All of this should be done behind our authentication too.
+
 1. modified `schema.prisma` to include additional table fields (and relationships)
-2. re-generate the schemas with `npx prisma migrate dev --name "add-vote-relation"`
+2. re-generate the *database* schemas with `npx prisma migrate dev --name "add-vote-relation"`
+3. create `graphql/Vote` type and mutator
+4. regenerate the *graphql* schema with `npm run generate` (and check out `schema.graphql` to see the new vote API)
+5. add `voters` field to `Link` and `votes` to `User`
+6. run it (`npm run dev`) and so long as you have an auth token (sign in or log in) in headers, can add a 'vote' to a Link.
+7. checking in Prisma Studio (`npx prisma studio`) shows the nice updates
+
+### Custom Scalars

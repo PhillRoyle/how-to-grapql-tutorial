@@ -44,6 +44,10 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   }
+  Vote: { // root type
+    link: NexusGenRootTypes['Link']; // Link!
+    user: NexusGenRootTypes['User']; // User!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -66,6 +70,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     postedBy: NexusGenRootTypes['User'] | null; // User
     url: string; // String!
+    voters: NexusGenRootTypes['User'][]; // [User!]!
   }
   Mutation: { // field return type
     createLink: NexusGenRootTypes['Link']; // Link!
@@ -73,6 +78,7 @@ export interface NexusGenFieldTypes {
     login: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     signup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     updateLink: NexusGenRootTypes['Link']; // Link!
+    vote: NexusGenRootTypes['Vote'] | null; // Vote
   }
   Query: { // field return type
     fetchAllLinks: NexusGenRootTypes['Link'][]; // [Link!]!
@@ -83,6 +89,11 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     links: NexusGenRootTypes['Link'][]; // [Link!]!
     name: string; // String!
+    votes: NexusGenRootTypes['Link'][]; // [Link!]!
+  }
+  Vote: { // field return type
+    link: NexusGenRootTypes['Link']; // Link!
+    user: NexusGenRootTypes['User']; // User!
   }
 }
 
@@ -96,6 +107,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     postedBy: 'User'
     url: 'String'
+    voters: 'User'
   }
   Mutation: { // field return type name
     createLink: 'Link'
@@ -103,6 +115,7 @@ export interface NexusGenFieldTypeNames {
     login: 'AuthPayload'
     signup: 'AuthPayload'
     updateLink: 'Link'
+    vote: 'Vote'
   }
   Query: { // field return type name
     fetchAllLinks: 'Link'
@@ -113,6 +126,11 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     links: 'Link'
     name: 'String'
+    votes: 'Link'
+  }
+  Vote: { // field return type name
+    link: 'Link'
+    user: 'User'
   }
 }
 
@@ -138,6 +156,9 @@ export interface NexusGenArgTypes {
       description?: string | null; // String
       id: number; // Int!
       url?: string | null; // String
+    }
+    vote: { // args
+      linkId: number; // Int!
     }
   }
   Query: {
