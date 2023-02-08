@@ -210,3 +210,16 @@ and each user should know which Links they've voted for. All of this should be d
 7. checking in Prisma Studio (`npx prisma studio`) shows the nice updates
 
 ### Custom Scalars
+Generally, these are primitive, but we might want to define more complex ones, eg the `url` in `Link` is a string, but we might want to change it to `Url` type
+to add in nice validation, etc.
+
+> The benefit of scalars is that they simultaneously define the representation and validation for the primitive data types in your API.
+
+Due to the above, our custom scalars need to define how to de/serialise data (uses `GraphQLScalarType`). There are a load of predefined ones in 
+`graphql-scalars`, i.e. `DateTime`.
+
+1. add the new lib to `package.json`
+2. import the right lib in `graphql/scalars/Date` and add to the `index.ts` export list
+3. add to the `Link` type definition in a `createdAt` field
+4. regenerate the *graphql* schema with `npm run generate` (and check out `schema.graphql` to see the new scalar, and field in Link)
+5. use the `fetchAllLinks` query, and the new field should be populated (taken from prisma metadata!!?)

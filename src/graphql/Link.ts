@@ -10,6 +10,8 @@ export const Link = objectType({
     t.nonNull.int("id");
     t.nonNull.string("description");
     t.nonNull.string("url");
+    // createdAt is of type `dateTime`, defined in `graphql/scalars/Date` 
+    t.nonNull.dateTime("createdAt");
     // add an OPTIONAL (not nonNull) link to the user who created this. Note it's
     // a `field` here, not an easily resolvable scalar type, so the `resolver`
     // fn tells graphql how to get this from the DB and how to return it.
