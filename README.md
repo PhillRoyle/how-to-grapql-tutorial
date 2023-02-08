@@ -126,6 +126,10 @@ database engine - reads and writes directly to disk, so not lots of set up, in f
 `npx prisma migrate dev --name "init"` --> creates `dev.db` and `dev.db-journal` - used `schema.prisma` to make a
 `Link` DB table.
 
+### Prisma UI
+Prisma includes [Prisma Studio](https://github.com/prisma/studio) that gives a UI to tables, data, and relationships. 
+To access it, write `npx prisma studio`, it'll open on [localhost:5555](http://localhost:5555/). 
+
 **NB** can regenerate data using `npx prisma generate`.
 
 ### Running it as standalone
