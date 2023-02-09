@@ -63,6 +63,30 @@ query FetchAllLinks($filter: String, $skip: Int, $take: Int) {
 ```
 passing in **variable**: `{"filter": "","take": 3, "skip": 1}`. Take &/or Skip can be present or not. If only 'take' if provided, the query will return 3 items, starting at 0; if only 'skip' is provided, it will return *all* items, except the first (as 1 was passed).
 
+#### Fetch All Links **with sorting**
+We also add sorting, which can take zero or more fields to sort over, and sort options of `asc` or `desc`:
+```
+query FetchAllLinks($orderBy: [LinkOrderByInput!]) {
+  fetchAllLinks(orderBy: $orderBy) {
+    url
+    id
+    description
+    voters {
+      name
+    }
+  }
+}
+```
+passing in **variable**: 
+```
+{
+  "orderBy": [
+    { "url": "asc",},
+    { "description": "desc",}
+  ]
+}
+```. If no args are passed, we sort based on ID (or not at all?) If one is passed, sort (asc or desc) on that, and if, in this case, two Links have the same url, we further sort based on description.
+
 
 ### Fetch Single Link
 ```

@@ -1,6 +1,7 @@
 // objectType is used to define a new `type` in graqhQL schema
+import { Prisma } from "@prisma/client";
 import { GraphQLError } from "graphql/error/GraphQLError";
-import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
+import { extendType, nonNull, objectType, stringArg, intArg, inputObjectType, enumType, arg, list } from "nexus";
 
 // *********************
 // Define the Object Schema itself
@@ -35,6 +36,23 @@ export const Link = objectType({
   },
 });
 
+// Define the Link Ordering Schema 
+export const LinkOrderByInput = inputObjectType({
+  name: "LinkOrderByInput",
+  definition(t) {
+    // define the fields which are sortable
+      t.field("description", { type: Sort });
+      t.field("url", { type: Sort });
+      t.field("createdAt", { type: Sort });
+  },
+});
+
+// Define the Sorting Options Schema 
+export const Sort = enumType({
+  name: "Sort",
+  members: ["asc", "desc"],
+});
+
 // *********************
 // Below here, define the Queries & Mutations that make up my API
 // *********************
@@ -52,6 +70,8 @@ export const LinkQuery = extendType({
         filter: stringArg(), // optional arg
         take: intArg(),
         skip: intArg(),
+        // as this is a list, we can provide multiple sorting options, i.e. start with `url`, and if 2 entries have the same url, sort further by `createdAt`
+        orderBy: arg({ type: list(nonNull(LinkOrderByInput)) }),
       },
       // 'resolve' is the name of the resolver function
       resolve(parent, args, context) {
@@ -70,6 +90,7 @@ export const LinkQuery = extendType({
           where,
           take: args.take as number | undefined,
           skip: args.skip as number | undefined,
+          orderBy: args?.orderBy as Prisma.Enumerable<Prisma.LinkOrderByWithRelationInput> | undefined,
         });
       },
     });

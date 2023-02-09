@@ -234,6 +234,7 @@ Due to the above, our custom scalars need to define how to de/serialise data (us
 4. regenerate the *graphql* schema with `npm run generate` (and check out `schema.graphql` to see the new scalar, and field in Link)
 5. use the `fetchAllLinks` query, and the new field should be populated (taken from prisma metadata!!?)
 
+---
 
 ## 5 Filtering, Pagination, and Sorting
 GraphQL lets you add params to queries to adjust what's returned.
@@ -261,8 +262,17 @@ and the REST API could be `GET example.com/posts?after=153135&count=25`
 
 [This](https://www.apollographql.com/blog/graphql/pagination/understanding-pagination-rest-graphql-and-relay/) has a nice summary.
 
-### Exercise
+#### Exercise
 * add `take` and `skip` args to the `fetchAllLinks` API, again optional.
 * run `npm run generate` so that the new args are added to the `schema.graphql` file, and are available to the resolver.
 * add them beneath the `where` clause, remembering that they're optional.
 * `npm run dev` and test with the new args and variables
+
+### Pagination
+* create an inputObjectType in `Link`, and an enum to provide sorting options
+> LinkOrderByInput represents the criteria by which that the list of Link elements can be sorted. The Sort enum is used to define the sorting order.
+* add an `orderBy` field to the `fetchAllLinks` API. Note that this take a list, so we can provide multiple sorting options, i.e. start with `url`, and if 2 entries have the same url, sort further by `createdAt`
+* run `npm run generate` to update `schema.graphql`
+* add an `orderBy` clause beneath the `where` and pagination fields in the resolver
+* `npm run dev` and test with the new args and variables
+
