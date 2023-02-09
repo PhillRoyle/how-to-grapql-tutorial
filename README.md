@@ -326,3 +326,7 @@ So I can change how I retrive Links and Feed should just work.
 - PLUS: seems nice for code re-use
 - MINUS: lose type-checking from the schema - if `Links` adds an extra arg and `Feed` doesn't, I _think_ I wouldn't be able to pass that param into the query
 - MINUS: if these are so closely related that they can share a `where` clause, maybe they do belong in the same file?
+
+## Next Steps
+
+The [tutorial](https://www.howtographql.com/typescript-apollo/9-deployment/) continues to change the DB from MySql to postgres, dockerises it, deploys to heroku, and makes github workflows for deployment 
