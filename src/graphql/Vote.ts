@@ -1,5 +1,6 @@
 import { objectType, extendType, nonNull, intArg } from "nexus";
 import { User } from "@prisma/client";
+import { GraphQLError } from "graphql/error/GraphQLError";
 
 export const Vote = objectType({
   name: "Vote",
@@ -26,7 +27,12 @@ export const VoteMutation = extendType({
         const { linkId } = args;
 
         if (!userId) {
-          throw new Error("Cannot vote without logging in.");
+          throw new GraphQLError("Cannot vote without logging in.", {
+            extensions: {
+              code: "UNAUTHENTICATED",
+              http: { status: 401 },
+            },
+          });
         }
 
         let link;
@@ -45,10 +51,13 @@ export const VoteMutation = extendType({
             },
           });
         } catch (e) {
-          console.log(`ERROR - unable to update Link ${linkId} for User ${userId}`);
-        }
-        if (!link) {
-          throw new Error(`ERROR - unable to vote for Link ${linkId}. Does it exist?`);
+          let error :Error = e;
+          throw new GraphQLError("Uuable to vote for Link ${linkId}. Does it exist?", {
+            extensions: {
+              code: "LINK_NOT_FOUND",
+              http: { status: 404 },
+            },
+          });
         }
 
         const user = await context.prisma.user.findUnique({

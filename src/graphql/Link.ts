@@ -1,4 +1,5 @@
 // objectType is used to define a new `type` in graqhQL schema
+import { GraphQLError } from "graphql/error/GraphQLError";
 import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
 
 // *********************
@@ -10,7 +11,7 @@ export const Link = objectType({
     t.nonNull.int("id");
     t.nonNull.string("description");
     t.nonNull.string("url");
-    // createdAt is of type `dateTime`, defined in `graphql/scalars/Date` 
+    // createdAt is of type `dateTime`, defined in `graphql/scalars/Date`
     t.nonNull.dateTime("createdAt");
     // add an OPTIONAL (not nonNull) link to the user who created this. Note it's
     // a `field` here, not an easily resolvable scalar type, so the `resolver`
@@ -37,6 +38,8 @@ export const Link = objectType({
 // *********************
 // Below here, define the Queries & Mutations that make up my API
 // *********************
+
+// QUERIES **********
 
 // extends the `Query` type, adding a new root field 'feed'
 export const LinkQuery = extendType({
@@ -77,6 +80,8 @@ export const FeedQuery = extendType({
   },
 });
 
+// MUTATIONS **********
+
 // extends the `Mutation` type, adding a new root field 'feed'
 export const LinkMutation = extendType({
   type: "Mutation",
@@ -94,11 +99,14 @@ export const LinkMutation = extendType({
         const { description, url } = args;
         const { userId } = context; // added for auth
 
-        console.log(`===== payload ${description} ${url}, ${userId}}`);
-
         // only auth users allowed
         if (!userId) {
-          throw new Error("Unauthorised Access.");
+          throw new GraphQLError("User is not authenticated", {
+            extensions: {
+              code: "UNAUTHENTICATED",
+              http: { status: 401 },
+            },
+          });
         } else {
           const newLink = context.prisma.link.create({
             data: {
@@ -128,12 +136,24 @@ export const DeleteLinkMutation = extendType({
       },
 
       resolve(parent, args, context) {
-        const linkForDeletion = context.prisma.link.delete({
-          where: {
-            id: args.id,
-          },
-        });
-        return linkForDeletion;
+        const { userId } = context; // added for auth
+
+        // only auth users allowed
+        if (!userId) {
+          throw new GraphQLError("User is not authenticated", {
+            extensions: {
+              code: "UNAUTHENTICATED",
+              http: { status: 401 },
+            },
+          });
+        } else {
+          const linkForDeletion = context.prisma.link.delete({
+            where: {
+              id: args.id,
+            },
+          });
+          return linkForDeletion;
+        }
       },
     });
   },
@@ -154,19 +174,30 @@ export const ModifyLinkMutation = extendType({
 
       resolve(parent, args, context) {
         const { id, description, url } = args;
+        const { userId } = context; // added for auth
 
-        const linkToModify = context.prisma.link.update({
-          where: {
-            id,
-          },
-          data: {
-            //when a field is assigned undefined it means ignore this and do nothing for this field.
-            description: description ? description : undefined,
-            url: url ? url : undefined,
-          },
-        });
+        // only auth users allowed
+        if (!userId) {
+          throw new GraphQLError("User is not authenticated", {
+            extensions: {
+              code: "UNAUTHENTICATED",
+              http: { status: 401 },
+            },
+          });
+        } else {
+          const linkToModify = context.prisma.link.update({
+            where: {
+              id,
+            },
+            data: {
+              //when a field is assigned undefined it means ignore this and do nothing for this field.
+              description: description ? description : undefined,
+              url: url ? url : undefined,
+            },
+          });
 
-        return linkToModify;
+          return linkToModify;
+        }
       },
     });
   },
