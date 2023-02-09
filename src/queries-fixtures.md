@@ -47,6 +47,22 @@ query FetchAllLinks($filter: String) {
 ```
 passing in **variable**: `{"filter": "BBC",}`. The value can be any string or null. Empty string ~= no filter due to node's truthy checking. If the filter string matches nothing, an empty list will be returned (in `Link`, the line `t.nonNull.list.nonNull.field("fetchAllLinks"` means that we can't return null, and any items in the list must be non-null `Link` types, but empty list is allowed).
 
+#### Fetch All Links **with pagination**
+We also add pagination, with take & skip as limit & offset:
+```
+query FetchAllLinks($filter: String, $skip: Int, $take: Int) {
+  fetchAllLinks(filter: $filter, skip: $skip, take: $take) {
+    url
+    id
+    description
+    voters {
+      name
+    }
+  }
+}
+```
+passing in **variable**: `{"filter": "","take": 3, "skip": 1}`. Take &/or Skip can be present or not. If only 'take' if provided, the query will return 3 items, starting at 0; if only 'skip' is provided, it will return *all* items, except the first (as 1 was passed).
+
 
 ### Fetch Single Link
 ```

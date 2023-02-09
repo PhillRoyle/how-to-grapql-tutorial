@@ -31,7 +31,7 @@ type Mutation {
 }
 
 type Query {
-  fetchAllLinks(filter: String): [Link!]!
+  fetchAllLinks(filter: String, skip: Int, take: Int): [Link!]!
   fetchSingleLink(id: Int!): Link!
 }
 

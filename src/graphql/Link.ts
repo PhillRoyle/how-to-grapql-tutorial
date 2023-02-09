@@ -50,6 +50,8 @@ export const LinkQuery = extendType({
       type: "Link",
       args: {
         filter: stringArg(), // optional arg
+        take: intArg(),
+        skip: intArg(),
       },
       // 'resolve' is the name of the resolver function
       resolve(parent, args, context) {
@@ -66,6 +68,8 @@ export const LinkQuery = extendType({
 
         return context.prisma.link.findMany({
           where,
+          take: args.take as number | undefined,
+          skip: args.skip as number | undefined,
         });
       },
     });

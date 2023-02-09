@@ -5,7 +5,17 @@ Take a look at my `oreilly_practical_graphQL` repo for basics
 
 ## What is this?
 
-Making a 'hackernews' api
+Making a 'hackernews' api. 
+It has concepts of users signing up and logging in, 'links' that people have 'posted', containing a url and description, and a mechanism for 'voting' on links that you like. We'll also add authentication, persistence, filtering, sorting, etc.
+
+To view the queries used (in [prisma client](http://localhost:3000/), started with `npm run dev`), look at [query fixtures](./src/queries-fixtures.md).
+
+## Get Started
+* install dependencies `npm i`
+* build the solution `npm run build/compile`
+* generate graphQL schema `npm run generate`
+* start [prisma client](http://localhost:3000/) `npm run dev`
+* optinally, look at the data in prisma studio - [localhost:5555](http://localhost:5555/) - `npx prisma studio`
 
 ## 1. Basic CRUD
 
@@ -232,5 +242,27 @@ I *assume* this is a SQL-style filter, where only the data required is returned,
 
 In this case, Prisma does lots of the work to make it simpler. 
 
-We'll add a `filter: string` parameter to the `fetchAllLinks` API. It should only return Link elements whose `url` or `description` match the filter.
-* 
+### Filtering
+We'll add a `filter: string` parameter to the `fetchAllLinks` API. It should only return Link elements whose `url` or `description` match the filter. Next, we define a `where` clause, making sure that we check for filter being present as it's optional. Inside that, simply check whether the filter string is a substring of url or description.
+
+### Pagination
+
+#### Overview of methods
+There are two main approaches to pagination (although both are similar):
+1. Limit-Offset. Largely used for page 1, page 2, page 3,... style pagination. You provide the `limit` - how many items to return - and the `offset` - where to start from, so in SQL `SELECT * FROM posts ORDER BY created_at LIMIT 10 OFFSET 2500;` we'd get the next 10 posts, starting at post 2500 - 2501 - 2510. As we know how many fit on a 'page' (10), a REST API could just supply the page number `GET https://meta.discourse.org/latest.json?page=2`
+**NOTE** in prisma, it's termed 'take' and 'skip' 😫 Take == limit - how many items you take after the start index; Skip == Offset - how many elements are skipped before you start taking.
+2. Cursor-based. Better suited for non-static content, or infinite scroll, where the items don't always stay in the same order. Here, each item has some unique ID that can be referenced (the `cursor`), and we simply ask for x number of items *after* that. So for SQL, using `created_at` as our cursor:
+```
+SELECT * FROM posts
+WHERE created_at < $after
+ORDER BY created_at LIMIT $page_size;
+```
+and the REST API could be `GET example.com/posts?after=153135&count=25`
+
+[This](https://www.apollographql.com/blog/graphql/pagination/understanding-pagination-rest-graphql-and-relay/) has a nice summary.
+
+### Exercise
+* add `take` and `skip` args to the `fetchAllLinks` API, again optional.
+* run `npm run generate` so that the new args are added to the `schema.graphql` file, and are available to the resolver.
+* add them beneath the `where` clause, remembering that they're optional.
+* `npm run dev` and test with the new args and variables
