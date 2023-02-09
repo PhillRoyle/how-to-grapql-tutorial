@@ -31,6 +31,23 @@ query FetchAllLinks {
 }
 ```
 
+#### Fetch All Links **With Filtering**
+In tutorial 5, we added (optional) filtering to this API & query. The above query will still work, but to filter, use
+```
+query FetchAllLinks($filter: String) {
+  fetchAllLinks(filter: $filter) {
+    url
+    id
+    description
+    voters {
+      name
+    }
+  }
+}
+```
+passing in **variable**: `{"filter": "BBC",}`. The value can be any string or null. Empty string ~= no filter due to node's truthy checking. If the filter string matches nothing, an empty list will be returned (in `Link`, the line `t.nonNull.list.nonNull.field("fetchAllLinks"` means that we can't return null, and any items in the list must be non-null `Link` types, but empty list is allowed).
+
+
 ### Fetch Single Link
 ```
 query FetchSingleLink($fetchSingleLinkId: Int!) {

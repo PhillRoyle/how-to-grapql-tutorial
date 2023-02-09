@@ -181,6 +181,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    fetchAllLinks: { // args
+      filter?: string | null; // String
+    }
     fetchSingleLink: { // args
       id: number; // Int!
     }

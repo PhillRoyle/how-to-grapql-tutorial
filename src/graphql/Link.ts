@@ -48,9 +48,25 @@ export const LinkQuery = extendType({
     // return type is 'not nullable array of link type objects' ~ [Link!]!
     t.nonNull.list.nonNull.field("fetchAllLinks", {
       type: "Link",
+      args: {
+        filter: stringArg(), // optional arg
+      },
       // 'resolve' is the name of the resolver function
-      resolve(parent, args, context, info) {
-        return context.prisma.link.findMany();
+      resolve(parent, args, context) {
+        console.log(`******** args = ${JSON.stringify(args)}`);
+        // defining the `where` clause up front to make it easier to read; note we check it exists
+        const where = args.filter // 2
+          ? {
+              OR: [
+                { description: { contains: args.filter } },
+                { url: { contains: args.filter } },
+              ],
+            }
+          : {};
+
+        return context.prisma.link.findMany({
+          where,
+        });
       },
     });
   },

@@ -223,3 +223,14 @@ Due to the above, our custom scalars need to define how to de/serialise data (us
 3. add to the `Link` type definition in a `createdAt` field
 4. regenerate the *graphql* schema with `npm run generate` (and check out `schema.graphql` to see the new scalar, and field in Link)
 5. use the `fetchAllLinks` query, and the new field should be populated (taken from prisma metadata!!?)
+
+
+## 5 Filtering, Pagination, and Sorting
+GraphQL lets you add params to queries to adjust what's returned.
+
+I *assume* this is a SQL-style filter, where only the data required is returned, rather than a dynamoDB-style filter where it's *all* returned and filtered on the server.
+
+In this case, Prisma does lots of the work to make it simpler. 
+
+We'll add a `filter: string` parameter to the `fetchAllLinks` API. It should only return Link elements whose `url` or `description` match the filter.
+* 
