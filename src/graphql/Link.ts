@@ -60,7 +60,7 @@ export const Sort = enumType({
 // QUERIES **********
 
 // extends the `Query` type, adding a new root field 'feed'
-export const LinkQuery = extendType({
+export const AllLinksQuery = extendType({
   type: "Query",
   definition(t) {
     // return type is 'not nullable array of link type objects' ~ [Link!]!
@@ -99,7 +99,7 @@ export const LinkQuery = extendType({
 
 // return a single Feed item
 // extends the `Query` type, adding a new root field 'feed'
-export const FeedQuery = extendType({
+export const SingleLinkQuery = extendType({
   type: "Query",
   definition(t) {
     t.nonNull.field("fetchSingleLink", {

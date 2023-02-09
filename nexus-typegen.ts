@@ -60,6 +60,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     url: string; // String!
   }
+  LinkFeed: { // root type
+    count: number; // Int!
+    id?: string | null; // ID
+    links: NexusGenRootTypes['Link'][]; // [Link!]!
+  }
   Mutation: {};
   Query: {};
   User: { // root type
@@ -96,6 +101,11 @@ export interface NexusGenFieldTypes {
     url: string; // String!
     voters: NexusGenRootTypes['User'][]; // [User!]!
   }
+  LinkFeed: { // field return type
+    count: number; // Int!
+    id: string | null; // ID
+    links: NexusGenRootTypes['Link'][]; // [Link!]!
+  }
   Mutation: { // field return type
     createLink: NexusGenRootTypes['Link']; // Link!
     deleteLink: NexusGenRootTypes['Link']; // Link!
@@ -105,6 +115,7 @@ export interface NexusGenFieldTypes {
     vote: NexusGenRootTypes['Vote'] | null; // Vote
   }
   Query: { // field return type
+    LinkFeed: NexusGenRootTypes['LinkFeed']; // LinkFeed!
     fetchAllLinks: NexusGenRootTypes['Link'][]; // [Link!]!
     fetchSingleLink: NexusGenRootTypes['Link']; // Link!
   }
@@ -134,6 +145,11 @@ export interface NexusGenFieldTypeNames {
     url: 'String'
     voters: 'User'
   }
+  LinkFeed: { // field return type name
+    count: 'Int'
+    id: 'ID'
+    links: 'Link'
+  }
   Mutation: { // field return type name
     createLink: 'Link'
     deleteLink: 'Link'
@@ -143,6 +159,7 @@ export interface NexusGenFieldTypeNames {
     vote: 'Vote'
   }
   Query: { // field return type name
+    LinkFeed: 'LinkFeed'
     fetchAllLinks: 'Link'
     fetchSingleLink: 'Link'
   }
