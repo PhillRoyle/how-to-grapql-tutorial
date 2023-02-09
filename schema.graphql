@@ -43,7 +43,7 @@ type Mutation {
 }
 
 type Query {
-  LinkFeed: LinkFeed!
+  LinkFeed(filter: String, skip: Int, take: Int): LinkFeed!
   fetchAllLinks(filter: String, orderBy: [LinkOrderByInput!], skip: Int, take: Int): [Link!]!
   fetchSingleLink(id: Int!): Link!
 }

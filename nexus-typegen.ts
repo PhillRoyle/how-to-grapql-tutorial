@@ -204,6 +204,11 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    LinkFeed: { // args
+      filter?: string | null; // String
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
     fetchAllLinks: { // args
       filter?: string | null; // String
       orderBy?: NexusGenInputs['LinkOrderByInput'][] | null; // [LinkOrderByInput!]

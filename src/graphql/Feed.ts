@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
-import { extendType, objectType } from "nexus";
-import { Link } from "./Link";
+import { extendType, intArg, objectType, stringArg } from "nexus";
+import { Link, retrieveManyLinks } from "./Link";
 
 /*
 Add a new type to wrap 'Links' - in the tutorial, this goes *inside* Links and it's refactored.
@@ -22,15 +22,27 @@ export const LinkFeedQuery = extendType({
   definition(t) {
     t.nonNull.field("LinkFeed", {
       type: LinkFeed,
+      args: {
+        filter: stringArg(), // optional arg
+        take: intArg(),
+        skip: intArg(),
+      },
       // made this async
       async resolve(parent, args, context) {
+        // TODO - try to import retrieveManyLinks
+
+        console.log(`**** args = ${JSON.stringify(args)}`);
+
         const where = {}; // left empty here....
 
         // fetch all the links according to input params - awaited, as we need the result
-        const links = await context.prisma.link.findMany({
-          where,
-          //ignored filter, etc
-        });
+        // const links = await context.prisma.link.findMany({
+        //   where,
+        //   //ignored filter, etc
+        // });
+
+        // I have no idea if this is good practice, but it works!!!
+        const links = retrieveManyLinks(args, context);
 
         // count up the size of the list. Note, this is a prisma query, not looking at results from above, so `where`
         // is still needed. skip, take, and orderBy not used for count...

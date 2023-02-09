@@ -1,7 +1,17 @@
 // objectType is used to define a new `type` in graqhQL schema
 import { Prisma } from "@prisma/client";
 import { GraphQLError } from "graphql/error/GraphQLError";
-import { extendType, nonNull, objectType, stringArg, intArg, inputObjectType, enumType, arg, list } from "nexus";
+import {
+  extendType,
+  nonNull,
+  objectType,
+  stringArg,
+  intArg,
+  inputObjectType,
+  enumType,
+  arg,
+  list,
+} from "nexus";
 
 // *********************
 // Define the Object Schema itself
@@ -36,18 +46,18 @@ export const Link = objectType({
   },
 });
 
-// Define the Link Ordering Schema 
+// Define the Link Ordering Schema
 export const LinkOrderByInput = inputObjectType({
   name: "LinkOrderByInput",
   definition(t) {
     // define the fields which are sortable
-      t.field("description", { type: Sort });
-      t.field("url", { type: Sort });
-      t.field("createdAt", { type: Sort });
+    t.field("description", { type: Sort });
+    t.field("url", { type: Sort });
+    t.field("createdAt", { type: Sort });
   },
 });
 
-// Define the Sorting Options Schema 
+// Define the Sorting Options Schema
 export const Sort = enumType({
   name: "Sort",
   members: ["asc", "desc"],
@@ -75,23 +85,8 @@ export const AllLinksQuery = extendType({
       },
       // 'resolve' is the name of the resolver function
       resolve(parent, args, context) {
-        console.log(`******** args = ${JSON.stringify(args)}`);
         // defining the `where` clause up front to make it easier to read; note we check it exists
-        const where = args.filter // 2
-          ? {
-              OR: [
-                { description: { contains: args.filter } },
-                { url: { contains: args.filter } },
-              ],
-            }
-          : {};
-
-        return context.prisma.link.findMany({
-          where,
-          take: args.take as number | undefined,
-          skip: args.skip as number | undefined,
-          orderBy: args?.orderBy as Prisma.Enumerable<Prisma.LinkOrderByWithRelationInput> | undefined,
-        });
+        return retrieveManyLinks(args, context);
       },
     });
   },
@@ -243,3 +238,23 @@ export const ModifyLinkMutation = extendType({
     });
   },
 });
+
+export const retrieveManyLinks = (args, context) => {
+  const where = args.filter
+    ? {
+        OR: [
+          { description: { contains: args.filter } },
+          { url: { contains: args.filter } },
+        ],
+      }
+    : {};
+
+  return context.prisma.link.findMany({
+    where,
+    take: args.take as number | undefined,
+    skip: args.skip as number | undefined,
+    orderBy: args?.orderBy as
+      | Prisma.Enumerable<Prisma.LinkOrderByWithRelationInput>
+      | undefined,
+  });
+};
