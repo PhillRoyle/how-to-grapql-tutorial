@@ -276,3 +276,9 @@ and the REST API could be `GET example.com/posts?after=153135&count=25`
 * add an `orderBy` clause beneath the `where` and pagination fields in the resolver
 * `npm run dev` and test with the new args and variables
 
+### Link Feed
+Added a new API `LinkFeed`. The [tutorial](https://www.howtographql.com/typescript-apollo/8-filtering-pagination-and-sorting/) says to add it to the `Link` type and refactor the return, but it felt different.
+* created a new type `Feed`
+* defined resolver (with basic 'fetch all links' query)
+* ran `npm run generate`
+* the query works

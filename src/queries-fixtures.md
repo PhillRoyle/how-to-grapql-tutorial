@@ -85,7 +85,8 @@ passing in **variable**:
     { "description": "desc",}
   ]
 }
-```. If no args are passed, we sort based on ID (or not at all?) If one is passed, sort (asc or desc) on that, and if, in this case, two Links have the same url, we further sort based on description.
+```
+If no args are passed, we sort based on ID (or not at all?) If one is passed, sort (asc or desc) on that, and if, in this case, two Links have the same url, we further sort based on description.
 
 
 ### Fetch Single Link
@@ -106,6 +107,24 @@ query FetchSingleLink($fetchSingleLinkId: Int!) {
 }
 ```
 passing in **variable**: `{"fetchSingleLinkId": 6,}`
+
+### Fetch Feed
+```
+query LinkFeed {
+  LinkFeed {
+    links {
+      url
+      description
+      id
+    }
+    count
+    id
+  }
+}
+```
+this simple version has no args (sort, paginate, filter), so just returns all links, a count, and a 'query ID' based on the args passed in.
+
+---
 
 ## Mutations
 These are 'PUT', 'POST', 'DELETE' type requests.
