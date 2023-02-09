@@ -1,7 +1,8 @@
 # how-to-grapql-tutorial
 
 Following the tutorial from [how to graphql](https://www.howtographql.com/typescript-apollo/1-getting-started/).
-Take a look at my `oreilly_practical_graphQL` repo for basics.
+
+The tutorial uses ApolloServer v3, but I have used v4, so some of the code is different.
 
 [This Medium Article](https://medium.com/paypal-tech/graphql-resolvers-best-practices-cd36fdbcef55) is pretty interesting on best practice and cleanliness of resolvers.
 
@@ -20,7 +21,7 @@ To view the queries used (in [prisma client](http://localhost:3000/), started wi
 - start [prisma client](http://localhost:3000/) `npm run dev`
 - optinally, look at the data in prisma studio - [localhost:5555](http://localhost:5555/) - `npx prisma studio`
 
-## 1. Basic CRUD
+## 1. Basic CRUD (branch 1-basic-crud)
 
 1. ran `npx ts-node --transpile-only src/schema` - generated `nexus-typegen.ts` and `schema.graphql` files. NB, to do
    this, had to remove the `"type": "module",` from `package.json`.
@@ -146,7 +147,7 @@ query, then fetching the Link, then looking up the User name from that Link.
 
 ---
 
-## 2. Add Persistence - using Prisma and MySQL
+## 2. Add Persistence - using Prisma and MySQL (branch 2-graphql-with-prisma-db)
 
 From [how to graphQL](https://www.howtographql.com/typescript-apollo/4-adding-a-database/):
 
@@ -181,7 +182,7 @@ Added this stuff in `script.ts` as a separate runner to play with it. To execute
 
 ---
 
-## 3. Auth and Auth
+## 3. Auth and Auth  (branch 3-add-auth-and-auth)
 
 First, need to define the concept of a `User` - add it to the prisma schema - a new `User` model, and adding fileds to `Link` to represent who posted the link...
 
@@ -227,7 +228,7 @@ This time, it should be successful _and_, the link should be linked to the user 
 
 ---
 
-## 4. Voting and Customer Scalars
+## 4. Voting and Customer Scalars (branch 4-voting-and-custom-scalars)
 
 ### Add voting
 
@@ -260,7 +261,7 @@ Due to the above, our custom scalars need to define how to de/serialise data (us
 
 ---
 
-## 5 Filtering, Pagination, and Sorting
+## 5 Filtering, Pagination, and Sorting  (branch 5-filtering-sorting)
 
 GraphQL lets you add params to queries to adjust what's returned.
 
@@ -326,6 +327,8 @@ So I can change how I retrive Links and Feed should just work.
 - PLUS: seems nice for code re-use
 - MINUS: lose type-checking from the schema - if `Links` adds an extra arg and `Feed` doesn't, I _think_ I wouldn't be able to pass that param into the query
 - MINUS: if these are so closely related that they can share a `where` clause, maybe they do belong in the same file?
+
+---
 
 ## Next Steps
 
