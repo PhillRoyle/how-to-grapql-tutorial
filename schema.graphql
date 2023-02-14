@@ -11,6 +11,8 @@ type Link {
   description: String!
   id: Int!
   postedBy: User
+
+  """the address of the link posted"""
   url: String!
 }
 

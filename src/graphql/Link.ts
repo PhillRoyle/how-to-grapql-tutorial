@@ -9,7 +9,7 @@ export const Link = objectType({
   definition(t) {
     t.nonNull.int("id");
     t.nonNull.string("description");
-    t.nonNull.string("url");
+    t.nonNull.string("url", { description: "the address of the link posted" });
     // add an OPTIONAL (not nonNull) link to the user who created this. Note it's
     // a `field` here, not an easily resolvable scalar type, so the `resolver`
     // fn tells graphql how to get this from the DB and how to return it.
